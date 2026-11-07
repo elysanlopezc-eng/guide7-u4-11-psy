@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colegio Montano - Prevention, Support, and Applying Well-being Skills Guide</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        montano: {
+                            blue: '#1269A8',
+                            yellow: '#F7D615',
+                            teal: '#54887D',
+                            lightblue: '#88B5C7',
+                            olive: '#A6B046',
+                            softwhite: '#F2F5E9'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'Segoe UI', 'Tahoma', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F2F5E9;
+            font-family: 'Nunito', 'Segoe UI', sans-serif;
+            color: #2D3748;
+        }
+
+        .whiteboard-frame {
+            background: #ffffff;
+            border: 12px solid #CBD5E0;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+
+        .tab-btn.active {
+            background-color: #1269A8;
+            color: #ffffff;
+            border-bottom-color: #F7D615;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #EDF2F7;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #88B5C7;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #1269A8;
+        }
+
+        .pulse-mic {
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(18, 105, 168, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(18, 105, 168, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(18, 105, 168, 0); }
+        }
+    </style>
+</head>
+<body class="p-2 md:p-6 min-h-screen">
+
+    <!-- MAIN CONTAINER WITH WHITEBOARD FRAME DESIGN -->
+    <div id="whiteboard" class="whiteboard-frame max-w-7xl mx-auto p-4 md:p-8 min-h-[90vh] flex flex-col justify-between">
+        
+        <!-- HEADER SECTION -->
+        <header class="border-b-2 border-gray-200 pb-4 mb-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                
+                <!-- Logo & School Info -->
+                <div class="flex items-center space-x-4">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyEop0yf6lZ7Jk9MILZxF1rBj4Oqs5esyhIQ&s" 
+                         alt="Colegio Montano Logo" 
+                         class="h-16 w-auto object-contain rounded-lg shadow-sm border border-gray-100"
+                         onerror="this.src='https://placehold.co/150x60/1269A8/ffffff?text=Colegio+Montano'">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-extrabold text-montano-blue tracking-tight">COLEGIO MONTANO</h1>
+                        <p class="text-sm font-semibold text-montano-teal">Interactive Study Guide 7 | 11th Grade High School ESL Level B2 Advanced</p>
+                    </div>
+                </div>
+
+                <!-- Topic Banner & Fullscreen Toggle -->
+                <div class="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-end">
+                    <div class="bg-montano-lightblue/20 border-l-4 border-montano-blue p-3 rounded-r-lg text-right">
+                        <span class="text-xs uppercase font-bold text-montano-blue tracking-wider block">Capstone Topic</span>
+                        <span class="text-base font-bold text-gray-800">Prevention, Support & Well-being Action Plan</span>
+                    </div>
+
+                    <button onclick="toggleFullscreen()" class="bg-montano-blue hover:bg-montano-teal text-white p-3 rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 text-sm font-bold" title="Toggle Fullscreen">
+                        <i class="fa-solid font-bold fa-expand text-lg"></i>
+                        <span class="hidden sm:inline">Fullscreen</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- NAVIGATION TABS -->
+            <nav class="mt-6 flex flex-wrap gap-2 border-b border-gray-200 text-sm md:text-base">
+                <button onclick="switchTab(1)" id="tab-btn-1" class="tab-btn active px-4 py-3 rounded-t-xl font-bold flex items-center space-x-2">
+                    <i class="fa-solid fa-hands-holding-circle"></i>
+                    <span>1. Theoretical Foundations</span>
+                </button>
+                <button onclick="switchTab(2)" id="tab-btn-2" class="tab-btn bg-gray-100 text-gray-600 hover:bg-gray-200 px-4 py-3 rounded-t-xl font-bold flex items-center space-x-2">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>2. Solved Examples (15)</span>
+                </button>
+                <button onclick="switchTab(3)" id="tab-btn-3" class="tab-btn bg-gray-100 text-gray-600 hover:bg-gray-200 px-4 py-3 rounded-t-xl font-bold flex items-center space-x-2">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    <span>3. Live Voice Simulator</span>
+                </button>
+                <button onclick="switchTab(4)" id="tab-btn-4" class="tab-btn bg-gray-100 text-gray-600 hover:bg-gray-200 px-4 py-3 rounded-t-xl font-bold flex items-center space-x-2">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>4. Action Plan Workshop</span>
+                </button>
+                <button onclick="switchTab(5)" id="tab-btn-5" class="tab-btn bg-gray-100 text-gray-600 hover:bg-gray-200 px-4 py-3 rounded-t-xl font-bold flex items-center space-x-2">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    <span>5. Formative Evaluation (15)</span>
+                </button>
+            </nav>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-grow">
+            
+            <!-- TAB 1: THEORETICAL FOUNDATIONS -->
+            <section id="tab-content-1" class="tab-content space-y-6">
+                <!-- Overview Banner -->
+                <div class="bg-montano-softwhite p-6 rounded-2xl border-2 border-montano-lightblue/40">
+                    <h2 class="text-2xl font-bold text-montano-blue mb-3 flex items-center">
+                        <i class="fa-solid fa-compass text-montano-yellow mr-3 text-3xl"></i>
+                        Integrated Synthesis: Capstone Prevention & Support Framework
+                    </h2>
+                    <p class="text-gray-700 leading-relaxed text-base md:text-lg">
+                        Guide 7 synthesizes our three major wellness pillars: <strong>Emotional Regulation & Mental Health</strong>, <strong>Healthy Relationships & Consent</strong>, and <strong>Addiction Literacy & Risk Reduction</strong>. True prevention requires recognizing warning signs early, delivering non-judgmental support, approaching trusted adults, and executing a personalized, practical Well-being Action Plan.
+                    </p>
+                </div>
+
+                <!-- Concept Breakdown Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Card 1 -->
+                    <div class="bg-white rounded-xl p-5 border-t-8 border-montano-blue shadow-md hover:shadow-lg transition-all">
+                        <div class="text-montano-blue text-3xl mb-3"><i class="fa-solid fa-bell"></i></div>
+                        <h3 class="font-bold text-lg text-gray-800 mb-2">1. Recognizing Need for Help</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Detecting distress across physical, emotional, social, and digital channels before crisis escalation. Differentiating temporary stress from prolonged functional impairment.
+                        </p>
+                        <div class="mt-4 pt-3 border-t border-gray-100">
+                            <span class="text-xs font-bold text-montano-blue uppercase">Distress Detection</span>
+                            <div class="w-full bg-gray-200 h-2 rounded-full mt-1">
+                                <div class="bg-montano-blue h-2 rounded-full w-5/6"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white rounded-xl p-5 border-t-8 border-montano-yellow shadow-md hover:shadow-lg transition-all">
+                        <div class="text-montano-yellow text-3xl mb-3"><i class="fa-solid fa-comments"></i></div>
+                        <h3 class="font-bold text-lg text-gray-800 mb-2">2. Non-Judgmental Support</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Using active listening, validation, and empathetic language without offering unsolicited amateur solutions or dismissing a peer's lived experience.
+                        </p>
+                        <div class="mt-4 pt-3 border-t border-gray-100">
+                            <span class="text-xs font-bold text-montano-yellow uppercase">Supportive Response</span>
+                            <div class="w-full bg-gray-200 h-2 rounded-full mt-1">
+                                <div class="bg-montano-yellow h-2 rounded-full w-4/5"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white rounded-xl p-5 border-t-8 border-montano-teal shadow-md hover:shadow-lg transition-all">
+                        <div class="text-montano-teal text-3xl mb-3"><i class="fa-solid fa-user-tie"></i></div>
+                        <h3 class="font-bold text-lg text-gray-800 mb-2">3. Trusted Adult Referral</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Formulating respectful scripts to approach counselors, teachers, parents, or health professionals when safety, relationships, or mental health are at risk.
+                        </p>
+                        <div class="mt-4 pt-3 border-t border-gray-100">
+                            <span class="text-xs font-bold text-montano-teal uppercase">Help-Seeking Readiness</span>
+                            <div class="w-full bg-gray-200 h-2 rounded-full mt-1">
+                                <div class="bg-montano-teal h-2 rounded-full w-5/6"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="bg-white rounded-xl p-5 border-t-8 border-montano-olive shadow-md hover:shadow-lg transition-all">
+                        <div class="text-montano-olive text-3xl mb-3"><i class="fa-solid fa-clipboard-list"></i></div>
+                        <h3 class="font-bold text-lg text-gray-800 mb-2">4. Integrated Action Plan</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Structuring a multi-layered well-being plan: personal coping strategies, boundary guardrails, peer support rules, and emergency contact protocols.
+                        </p>
+                        <div class="mt-4 pt-3 border-t border-gray-100">
+                            <span class="text-xs font-bold text-montano-olive uppercase">Action Plan Mastery</span>
+                            <div class="w-full bg-gray-200 h-2 rounded-full mt-1">
+                                <div class="bg-montano-olive h-2 rounded-full w-4/5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparative Support Strategy Matrix -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm mt-6">
+                    <h3 class="text-xl font-bold text-montano-blue mb-4 flex items-center">
+                        <i class="fa-solid fa-code-compare mr-2 text-montano-teal"></i> Comparative Support Strategy Matrix Across Wellness Domains
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-700 border-collapse">
+                            <thead>
+                                <tr class="bg-montano-softwhite text-montano-blue border-b border-gray-200">
+                                    <th class="p-3 font-extrabold">Wellness Domain</th>
+                                    <th class="p-3 font-extrabold">Primary Warning Indicator</th>
+                                    <th class="p-3 font-extrabold">Non-Judgmental Peer Response</th>
+                                    <th class="p-3 font-extrabold">Professional Support Referral</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-100">
+                                    <td class="p-3 font-bold text-montano-blue">Emotional Distress</td>
+                                    <td class="p-3">Chronic withdrawal, panic, emotional numbness, unmanaged stress.</td>
+                                    <td class="p-3">"I hear how heavy this feels. You don't have to carry it alone."</td>
+                                    <td class="p-3">School Guidance Counselor, Youth Psychologist, Helpline.</td>
+                                </tr>
+                                <tr class="border-b border-gray-100">
+                                    <td class="p-3 font-bold text-montano-teal">Unsafe Relationships</td>
+                                    <td class="p-3">Coercion, boundary pushing, digital privacy breaches, isolation.</td>
+                                    <td class="p-3">"Your boundaries matter. I support your right to feel safe and respected."</td>
+                                    <td class="p-3">Student Ethics Coordinator, Principal, Digital Safety Portal.</td>
+                                </tr>
+                                <tr class="border-b border-gray-100">
+                                    <td class="p-3 font-bold text-montano-olive">Addiction Concerns</td>
+                                    <td class="p-3">Compulsive habits, physical warning signs, academic drop, secrecy.</td>
+                                    <td class="p-3">"This is a health concern, not a character flaw. Let's find real support."</td>
+                                    <td class="p-3">School Nurse, Health Specialist, Addiction Resource Center.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: SOLVED EXAMPLES (15 EXAMPLES WITH TTS) -->
+            <section id="tab-content-2" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-montano-softwhite p-4 rounded-xl border border-montano-lightblue">
+                    <div>
+                        <h2 class="text-xl font-bold text-montano-blue">15 Integrated Prevention & Support Scenarios</h2>
+                        <p class="text-sm text-gray-600">Deconstructed scenarios covering distress recognition, supportive communication, adult referral, and action planning. Click the audio icon to listen.</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">5 Basic</span>
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">5 Intermediate</span>
+                        <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">5 Advanced</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar" id="examples-container">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+            </section>
+
+            <!-- TAB 3: LIVE INTERACTIVE VOICE SIMULATOR & PERFORMANCE DASHBOARD -->
+            <section id="tab-content-3" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Left Column: Interactive Voice Simulator -->
+                    <div class="lg:col-span-7 bg-white p-6 rounded-2xl border-2 border-montano-blue shadow-md flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between pb-3 border-b border-gray-200">
+                                <h3 class="text-xl font-bold text-montano-blue flex items-center">
+                                    <i class="fa-solid fa-headset mr-2 text-montano-teal"></i> Support & Referral Voice Simulator
+                                </h3>
+                                <span class="text-xs font-bold px-3 py-1 bg-montano-yellow text-gray-900 rounded-full">B2 Capstone Oral Practice</span>
+                            </div>
+
+                            <!-- Simulator Avatar & Prompt -->
+                            <div class="mt-4 p-4 bg-montano-softwhite rounded-xl border border-montano-lightblue/50">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-12 h-12 bg-montano-blue text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">
+                                        Coach
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-sm text-montano-blue">Director Vargas (Student Well-being Director)</h4>
+                                        <p id="simulator-prompt" class="text-sm text-gray-800 mt-1 italic">
+                                            "A classmate confided in you that they feel completely burnt out, are being pressured in a dating relationship, and are turning to unhealthy substances to cope. How do you respond with empathetic, non-judgmental validation and guide them to a trusted adult or professional?"
+                                        </p>
+                                        <button onclick="speakText(document.getElementById('simulator-prompt').innerText)" class="mt-2 text-xs text-montano-blue hover:text-montano-teal font-bold flex items-center space-x-1">
+                                            <i class="fa-solid fa-volume-high"></i>
+                                            <span>Listen to Scenario</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- User Input Area -->
+                            <div class="mt-6 space-y-3">
+                                <label class="block text-sm font-bold text-gray-700">Your Spoken or Written Response:</label>
+                                
+                                <div class="relative">
+                                    <textarea id="user-voice-input" rows="4" 
+                                        class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-montano-blue focus:border-transparent text-sm"
+                                        placeholder="Click microphone to record or type here... (e.g., 'Thank you for trusting me. What you are experiencing sounds overwhelming, but your safety and health matter. Let's talk with Ms. Morales, our guidance counselor, who can help us set up real support.')"></textarea>
+                                </div>
+
+                                <div class="flex flex-wrap items-center justify-between gap-3">
+                                    <button id="mic-btn" onclick="toggleSpeechRecognition()" class="bg-montano-blue hover:bg-montano-teal text-white px-5 py-2.5 rounded-xl font-bold flex items-center space-x-2 shadow transition-all">
+                                        <i class="fa-solid fa-microphone text-lg" id="mic-icon"></i>
+                                        <span id="mic-status">Start Recording</span>
+                                    </button>
+
+                                    <button onclick="analyzeUserResponse()" class="bg-montano-yellow hover:bg-yellow-400 text-gray-900 px-6 py-2.5 rounded-xl font-extrabold shadow transition-all flex items-center space-x-2">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                        <span>Evaluate Response</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feedback Output -->
+                        <div id="ai-feedback-box" class="mt-6 p-4 rounded-xl border border-gray-200 bg-gray-50 text-sm">
+                            <span class="font-bold text-gray-700 block mb-1"><i class="fa-solid fa-robot mr-1 text-montano-blue"></i> Pedagogical Assessment Feedback:</span>
+                            <p id="ai-feedback-text" class="text-gray-600">Submit your response to evaluate non-judgmental tone, referral clarity, and B2 communication fluency.</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Live Performance Dashboard -->
+                    <div class="lg:col-span-5 bg-white p-6 rounded-2xl border-2 border-montano-teal shadow-md flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-montano-teal pb-3 border-b border-gray-200 flex items-center">
+                                <i class="fa-solid fa-chart-line mr-2"></i> Live Performance Dashboard
+                            </h3>
+
+                            <div class="space-y-5 mt-4">
+                                <!-- Score 1: Speech Clarity -->
+                                <div>
+                                    <div class="flex justify-between text-sm font-bold mb-1">
+                                        <span class="text-gray-700">Pronunciation & Speech Clarity</span>
+                                        <span id="score-clarity-val" class="text-montano-blue">0%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
+                                        <div id="score-clarity-bar" class="bg-montano-blue h-full w-0 transition-all duration-700"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Score 2: Integrated Support Accuracy -->
+                                <div>
+                                    <div class="flex justify-between text-sm font-bold mb-1">
+                                        <span class="text-gray-700">Support & Referral Accuracy (B2 Level)</span>
+                                        <span id="score-accuracy-val" class="text-montano-teal">0%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
+                                        <div id="score-accuracy-bar" class="bg-montano-teal h-full w-0 transition-all duration-700"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Score 3: Non-Judgmental Etiquette -->
+                                <div>
+                                    <div class="flex justify-between text-sm font-bold mb-1">
+                                        <span class="text-gray-700">Empathetic & Non-Judgmental Tone</span>
+                                        <span id="score-etiquette-val" class="text-montano-olive">0%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
+                                        <div id="score-etiquette-bar" class="bg-montano-olive h-full w-0 transition-all duration-700"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Key Support Keywords Detected -->
+                            <div class="mt-6">
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Detected Support & Referral Keywords:</span>
+                                <div id="detected-keywords" class="flex flex-wrap gap-2 min-h-[50px] p-3 bg-montano-softwhite rounded-xl border border-gray-200">
+                                    <span class="text-xs text-gray-400 italic">No key terms detected yet. Speak or submit an answer.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-gray-100 text-center">
+                            <span class="text-xs text-gray-500">Colegio Montano Integrated Well-being Assessor</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: APPLIED WELL-BEING & PREVENTION ACTION PLAN WORKSHOP -->
+            <section id="tab-content-4" class="tab-content hidden space-y-6">
+                <div class="bg-montano-softwhite p-4 rounded-xl border border-montano-lightblue">
+                    <h2 class="text-xl font-bold text-montano-blue">Personal Well-being & Prevention Action Plan Workshop</h2>
+                    <p class="text-sm text-gray-600">Complete the 5 tasks below to synthesize your learning across all modules and create your personal action plan.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Task 1: Concept Review -->
+                    <div class="bg-white p-5 rounded-xl border-l-8 border-montano-blue shadow-sm space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-lg text-montano-blue">Task 1: Core Concept Review & Synthesis</h3>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">Review Synthesis</span>
+                        </div>
+                        <p class="text-sm text-gray-700">Summarize the core takeaways from all three modules: (1) Emotional Regulation, (2) Healthy Relationships/Consent, and (3) Addiction Literacy. How do these three areas intersect?</p>
+                        <textarea rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-montano-blue focus:border-transparent text-sm" placeholder="Summarize key takeaways and their intersection..."></textarea>
+                    </div>
+
+                    <!-- Task 2: Comparative Support Mapping -->
+                    <div class="bg-white p-5 rounded-xl border-l-8 border-montano-yellow shadow-sm space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-lg text-gray-800">Task 2: Comparing Support Strategies Across Scenarios</h3>
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">Strategy Comparison</span>
+                        </div>
+                        <p class="text-sm text-gray-700">Compare how peer support differs when responding to: (a) acute emotional panic before an exam, (b) an unsafe relationship boundary violation, and (c) concerns about substance overuse.</p>
+                        <textarea rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-montano-yellow focus:border-transparent text-sm" placeholder="Compare support approaches across emotional, relationship, and addiction scenarios..."></textarea>
+                    </div>
+
+                    <!-- Task 3: Practice Supportive Responses -->
+                    <div class="bg-white p-5 rounded-xl border-l-8 border-montano-teal shadow-sm space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-lg text-montano-teal">Task 3: Scripting Non-Judgmental Responses</h3>
+                            <span class="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-xs font-bold">Scripting Practice</span>
+                        </div>
+                        <p class="text-sm text-gray-700">Write out a complete 4-sentence dialogue script showing how you would validate a friend in distress and offer to walk with them to talk to a school counselor.</p>
+                        <textarea rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-montano-teal focus:border-transparent text-sm" placeholder="Write empathetic dialogue script..."></textarea>
+                    </div>
+
+                    <!-- Task 4: Trusted Adult & Resource Network -->
+                    <div class="bg-white p-5 rounded-xl border-l-8 border-montano-olive shadow-sm space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-lg text-gray-800">Task 4: Mapping Professional & Adult Support Resources</h3>
+                            <span class="px-3 py-1 bg-olive/20 text-gray-800 rounded-full text-xs font-bold">Resource Mapping</span>
+                        </div>
+                        <p class="text-sm text-gray-700">List 3 specific trusted adults (e.g., school guidance counselor, wellness director, parent) and 2 accredited emergency helpline/health resources you can contact in Guatemala or globally.</p>
+                        <textarea rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-montano-olive focus:border-transparent text-sm" placeholder="List 3 trusted adults and 2 accredited emergency resources..."></textarea>
+                    </div>
+
+                    <!-- Task 5: Creating Personal Action Plan -->
+                    <div class="bg-white p-5 rounded-xl border-l-8 border-red-400 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-lg text-red-700">Task 5: Personal Well-being & Prevention Action Plan</h3>
+                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">Action Plan</span>
+                        </div>
+                        <p class="text-sm text-gray-700">Construct your personal 4-part Well-being Plan: (1) Daily Coping Routine, (2) Non-Negotiable Relationship Boundary, (3) Substance Refusal Rule, and (4) Emergency Support Contact protocol.</p>
+                        <textarea rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-transparent text-sm" placeholder="Draft your 4-part personal well-being action plan..."></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button onclick="submitDiscussionActivity()" class="bg-montano-blue hover:bg-montano-teal text-white px-6 py-3 rounded-xl font-bold shadow transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Save & Submit Action Plan</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- TAB 5: FORMATIVE EVALUATION (15 PROBLEMS WITH ACCORDION SOLUTIONS) -->
+            <section id="tab-content-5" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-montano-softwhite p-4 rounded-xl border border-montano-lightblue">
+                    <div>
+                        <h2 class="text-xl font-bold text-montano-blue">Formative Evaluation Exercises (15 Problems)</h2>
+                        <p class="text-sm text-gray-600">Test your mastery of integrated prevention, distress recognition, non-judgmental support, and action planning across 3 tiers. Click "Show / Hide Solution" to review explanations.</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">5 Basic</span>
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">5 Intermediate</span>
+                        <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">5 Advanced</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar" id="evaluations-container">
+                    <!-- Dynamic evaluation items rendered by JS -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER SECTION -->
+        <footer class="mt-8 pt-4 border-t border-gray-200 text-center text-xs text-gray-500 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <span>&copy; 2026 Colegio Montano - Department of Educational Technology & Instructional Design</span>
+            <span class="font-semibold text-montano-blue">Guide 7: Prevention, Support, and Applying Well-being Skills | ESL Level B2</span>
+        </footer>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC & CONTENT DATA -->
+    <script>
+        // -----------------------------------------------------------------
+        // DATA: SOLVED EXAMPLES (15 SCENARIOS - 5 BASIC, 5 INTERMEDIATE, 5 ADVANCED)
+        // -----------------------------------------------------------------
+        const solvedExamplesData = [
+            // Level 1: Basic (1-5)
+            { id: 1, level: "Basic", title: "Recognizing Early Signs of Overwhelm", scenario: "Noticeably uncharacteristic silence, lack of eye contact, and head down during class.", trigger: "Emotional distress signal.", technique: "Empathetic Check-In: 'I noticed you seem quiet today. I'm here if you want to talk.'", result: "Opens non-pressured avenue for support." },
+            { id: 2, level: "Basic", title: "Validating Peer Feelings Without Preaching", scenario: "A classmate cries after a poor test score, saying 'I'm a complete failure.'", trigger: "Negative self-talk after failure.", technique: "Emotional Validation: 'It is completely understandable to feel upset after working hard. You're not a failure.'", result: "Provides immediate comfort without toxic positivity." },
+            { id: 3, level: "Basic", title: "Approaching a Trusted Teacher", scenario: "A student feels unsafe because of online harassment but fears being ignored.", trigger: "Help-seeking hesitation.", technique: "Structured Approach Script: 'Professor, do you have 5 minutes after class? I need advice on a safety concern.'", result: "Secures structured adult attention." },
+            { id: 4, level: "Basic", title: "Refusal + Alternative Activity Response", scenario: "Being pressured to stay at an unchaperoned party: 'Don't leave yet!'", trigger: "Social pressure.", technique: "Refusal & Alternative: 'No thanks, I need to head home, but let's grab lunch tomorrow.'", result: "Exits safely while preserving friendship." },
+            { id: 5, level: "Basic", title: "Daily Coping Routine Check", scenario: "Experiencing high test anxiety during finals week.", trigger: "Academic stress spike.", technique: "Applied Coping Strategy: Using 4-7-8 breathing and setting a strict 10 PM sleep boundary.", result: "Protects physical and cognitive recovery." },
+
+            // Level 2: Intermediate (6-10)
+            { id: 6, level: "Intermediate", title: "Supporting a Peer Facing Digital Coercion", scenario: "A friend discloses that their partner demands explicit photos under threat of breaking up.", trigger: "Relationship coercion & digital breach.", technique: "Support & Referral: 'That is coercion and it's wrong. Let's talk to the school guidance counselor right now.'", result: "Protects peer from coercion through professional intervention." },
+            { id: 7, level: "Intermediate", title: "Distinguishing Sadness from Prolonged Depression", scenario: "A classmate has withdrawn from all extracurriculars and sports for over a month.", trigger: "Persistent functional decline.", technique: "Literacy Assessment: Recognizing signs of prolonged clinical depression rather than temporary sadness.", result: "Triggers urgent referral to school psychologist." },
+            { id: 8, level: "Intermediate", title: "De-escalating Peer Substance Experimentation", scenario: "Peers encourage trying vaping in the restroom, claiming 'it reduces stress.'", trigger: "Substance normalization myth.", technique: "Fact-Based Refusal: 'Vaping increases nicotine addiction and anxiety. I use exercise to de-stress.'", result: "Counters myth with health-literate response." },
+            { id: 9, level: "Intermediate", title: "Constructing a Emergency Help Network", scenario: "Drafting a personal contact list for crisis situations during high school transition.", trigger: "Action plan preparedness.", technique: "Network Mapping: Recording phone numbers for 2 trusted family members, counselor, and local crisis line.", result: "Ensures instant access to help during emergencies." },
+            { id: 10, level: "Intermediate", title: "Handling Confidentiality Dilemmas", scenario: "A friend shares thoughts of self-harm and asks you to 'promise not to tell anyone.'", trigger: "Safety vs. secret conflict.", technique: "Ethical Safety Override: 'I care about your life too much to keep this secret. We must get help from an adult.'", result: "Prioritizes physical safety over secret-keeping." },
+
+            // Level 3: Advanced (11-15)
+            { id: 11, level: "Advanced", title: "Navigating Multi-Domain Crisis Intervention", scenario: "A peer faces severe family conflict, academic failure, and substance dependence simultaneously.", trigger: "Complex multi-issue crisis.", technique: "Systemic Support Coordination: Escorting peer to school counselor and helping outline a multi-disciplinary support plan.", result: "Initiates comprehensive institutional care." },
+            { id: 12, level: "Advanced", title: "Advocating for School-Wide Mental Health Protocols", scenario: "Student leaders notice peers do not know where to turn when experiencing relationship abuse.", trigger: "Systemic help-seeking gap.", technique: "Policy Proposal: Presenting an anonymous student support portal to the administration.", result: "Improves school-wide crisis accessibility." },
+            { id: 13, level: "Advanced", title: "Deconstructing Bystander Apathy in Group Harassment", scenario: "A student is being publicly shamed in a school-wide group chat while others watch silently.", trigger: "Bystander effect.", technique: "Active Bystander Intervention: Speaking out in chat against shaming, supporting target privately, and reporting to admins.", result: "Disrupts public harassment cycle." },
+            { id: 14, level: "Advanced", title: "Formulating a Lifelong Well-being Action Plan", scenario: "Preparing for the transition from high school to university environment.", trigger: "Major life transition stress.", technique: "Capstone Planning: Writing personal guidelines for sleep, boundaries, substance refusal, and mental health maintenance.", result: "Ensures long-term resilience across environments." },
+            { id: 15, level: "Advanced", title: "Synthesizing B2 ESL Fluency with Global Health Advocacy", scenario: "Presenting a capstone project in English on adolescent mental health literacy to international peers.", trigger: "Global academic presentation.", technique: "Fluency & Vocabulary Mastery: Using precise health terminology ('biopsychosocial', 'coercive control', 'early intervention').", result: "Demonstrates advanced B2 English and health leadership." }
+        ];
+
+        // -----------------------------------------------------------------
+        // DATA: FORMATIVE EVALUATION EXERCISES (15 EXERCISES WITH ACCORDION SOLUTIONS)
+        // -----------------------------------------------------------------
+        const evaluationData = [
+            // Level 1: Basic (1-5)
+            { id: 1, level: "Basic", task: "List the 3 core wellness modules integrated into Guide 7.", solution: "1. Emotional Regulation & Mental Health.\n2. Healthy Relationships & Consent.\n3. Addiction Literacy & Risk Reduction." },
+            { id: 2, level: "Basic", task: "State the primary difference between offering non-judgmental support and giving unsolicited advice.", solution: "Non-judgmental support validates feelings and listens actively without judgment, whereas unsolicited advice imposes assumptions and quick fixes without understanding." },
+            { id: 3, level: "Basic", task: "Identify 2 signs that indicate a peer may need professional mental health support rather than just casual conversation.", solution: "1. Prolonged withdrawal from activities for several weeks.\n2. Expressing feelings of hopelessness or thoughts of self-harm." },
+            { id: 4, level: "Basic", task: "True or False: 'If a friend asks you to keep a secret about their immediate physical safety, you should always keep the secret.' Explain.", solution: "False. Physical safety overrides secrecy. Immediate safety concerns must be reported to a trusted adult or professional." },
+            { id: 5, level: "Basic", task: "Write a 1-sentence script for requesting a private meeting with a school counselor.", solution: "Example: 'Hello Ms. Morales, I am experiencing a challenging situation and would like to schedule a private meeting to seek guidance.'" },
+
+            // Level 2: Intermediate (6-10)
+            { id: 6, level: "Intermediate", task: "Compare how support responses differ between an academic panic attack vs. a relationship boundary violation.", solution: "For a panic attack, immediate physiological grounding (breathing, sensory focus) is needed; for a boundary violation, assertive communication and safety/privacy planning are paramount." },
+            { id: 7, level: "Intermediate", task: "Outline the 4 essential components of a personal Well-being Action Plan.", solution: "1. Daily Coping & Grounding Routines.\n2. Personal & Digital Relationship Boundaries.\n3. Substance & Peer Pressure Refusal Protocols.\n4. Trusted Adult & Emergency Contact Network." },
+            { id: 8, level: "Intermediate", task: "Analyze why non-judgmental language is critical when discussing substance use concerns with a peer.", solution: "Judgmental language causes shame and defensive withdrawal, whereas non-judgmental language frames addiction as a health concern, encouraging open help-seeking." },
+            { id: 9, level: "Intermediate", task: "Explain how to practice active listening when a friend discloses high stress.", solution: "Maintain eye contact, avoid interrupting, reflect their feelings ('It sounds like you're feeling overwhelmed'), and ask open-ended questions." },
+            { id: 10, level: "Intermediate", task: "Propose 3 institutional resources available in high schools for student support.", solution: "1. School Guidance Office / Counselor.\n2. Wellness & Ethics Coordinator.\n3. School Medical Clinic / Nurse." },
+
+            // Level 3: Advanced (11-15)
+            { id: 11, level: "Advanced", task: "Synthesize how emotional regulation, boundary setting, and addiction literacy combine to protect adolescent well-being.", solution: "Emotional regulation manages stress without substances; boundaries protect against interpersonal coercion; addiction literacy ensures early medical intervention—creating holistic resilience." },
+            { id: 12, level: "Advanced", task: "Evaluate the role of active bystander intervention in preventing digital privacy breaches in high school group chats.", solution: "Active bystanders disrupt normalization by refusing to share, calling out boundary breaches, supporting victims, and alerting authorities, preventing cyber-harassment expansion." },
+            { id: 13, level: "Advanced", task: "Design a 3-step crisis intervention protocol for a student discovering a peer in acute distress.", solution: "1. Ensure immediate physical safety and stay calm.\n2. Deliver empathetic validation without judgment.\n3. Escort the peer to a trusted adult or emergency medical/psychological service." },
+            { id: 14, level: "Advanced", task: "Critique a school environment that relies solely on disciplinary punishment for wellness issues without support resources.", solution: "Punitive-only approaches increase stigma, hide problems, and prevent early intervention, whereas support-oriented frameworks build lasting health literacy and safety." },
+            { id: 15, level: "Advanced", task: "Formulate an argument on how B2 English mastery in well-being terminology empowers students as global health advocates.", solution: "Advanced vocabulary (e.g., 'biopsychosocial resilience', 'coercion resistance', 'support protocol') enables students to participate in international health forums, policy drafting, and cross-cultural advocacy." }
+        ];
+
+        // -----------------------------------------------------------------
+        // INITIALIZATION & TAB NAVIGATION
+        // -----------------------------------------------------------------
+        window.onload = function() {
+            renderExamples();
+            renderEvaluations();
+        };
+
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('bg-gray-100', 'text-gray-600');
+            });
+
+            document.getElementById(`tab-content-${tabIndex}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-btn-${tabIndex}`);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('bg-gray-100', 'text-gray-600');
+        }
+
+        function toggleFullscreen() {
+            const elem = document.getElementById('whiteboard');
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // TEXT-TO-SPEECH (TTS) SYSTEM
+        // -----------------------------------------------------------------
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.95;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Text-to-speech is not supported in your browser.");
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // RENDER SOLVED EXAMPLES (TAB 2)
+        // -----------------------------------------------------------------
+        function renderExamples() {
+            const container = document.getElementById('examples-container');
+            container.innerHTML = solvedExamplesData.map(ex => {
+                let badgeColor = ex.level === 'Basic' ? 'bg-green-100 text-green-800' : 
+                                 ex.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800';
+                
+                const speechPayload = `${ex.title}. Scenario: ${ex.scenario}. Response: ${ex.technique}. Result: ${ex.result}`;
+                
+                return `
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:border-montano-blue transition-all">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-3">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-bold ${badgeColor}">Level: ${ex.level}</span>
+                                <h3 class="font-bold text-gray-800 text-base md:text-lg">${ex.id}. ${ex.title}</h3>
+                            </div>
+                            <button onclick="speakText('${speechPayload.replace(/'/g, "\\'")}')" class="text-montano-blue hover:text-montano-teal p-2 rounded-lg bg-blue-50 flex items-center space-x-1 text-xs font-bold transition-all">
+                                <i class="fa-solid fa-volume-high text-sm"></i>
+                                <span>Listen Scenario</span>
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-gray-700">
+                            <p><strong>Scenario:</strong> ${ex.scenario}</p>
+                            <p class="text-xs bg-red-50 text-red-700 p-2 rounded-lg"><strong>Challenge:</strong> ${ex.trigger}</p>
+                            <p class="text-xs bg-blue-50 text-blue-900 p-2 rounded-lg"><strong>Support / Action Strategy:</strong> ${ex.technique}</p>
+                            <p class="text-xs bg-green-50 text-green-800 p-2 rounded-lg"><strong>Outcome:</strong> ${ex.result}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // -----------------------------------------------------------------
+        // RENDER FORMATIVE EVALUATION EXERCISES (TAB 5)
+        // -----------------------------------------------------------------
+        function renderEvaluations() {
+            const container = document.getElementById('evaluations-container');
+            container.innerHTML = evaluationData.map(ev => {
+                let badgeColor = ev.level === 'Basic' ? 'bg-green-100 text-green-800' : 
+                                 ev.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800';
+                return `
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold ${badgeColor}">${ev.id}. ${ev.level} Level</span>
+                            <button onclick="toggleSolution(${ev.id})" class="text-xs font-bold px-4 py-2 bg-montano-blue text-white rounded-lg hover:bg-montano-teal transition-all flex items-center space-x-1">
+                                <i class="fa-solid fa-eye" id="sol-icon-${ev.id}"></i>
+                                <span id="sol-btn-text-${ev.id}">Show Solution</span>
+                            </button>
+                        </div>
+                        
+                        <p class="text-sm font-semibold text-gray-800 mb-3">${ev.task}</p>
+                        
+                        <div id="solution-box-${ev.id}" class="hidden mt-3 p-4 bg-montano-softwhite border-l-4 border-montano-teal rounded-r-xl text-xs text-gray-700 space-y-1">
+                            <span class="font-bold text-montano-teal block mb-1">Pedagogical Solution:</span>
+                            <pre class="font-sans whitespace-pre-wrap">${ev.solution}</pre>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleSolution(id) {
+            const box = document.getElementById(`solution-box-${id}`);
+            const btnText = document.getElementById(`sol-btn-text-${id}`);
+            const icon = document.getElementById(`sol-icon-${id}`);
+
+            if (box.classList.contains('hidden')) {
+                box.classList.remove('hidden');
+                btnText.innerText = 'Hide Solution';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                box.classList.add('hidden');
+                btnText.innerText = 'Show Solution';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // SPEECH RECOGNITION (WEB SPEECH API) & VOICE SIMULATOR
+        // -----------------------------------------------------------------
+        let recognition = null;
+        let isRecording = false;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = function() {
+                isRecording = true;
+                document.getElementById('mic-status').innerText = "Listening...";
+                document.getElementById('mic-btn').classList.add('pulse-mic', 'bg-red-600');
+                document.getElementById('mic-btn').classList.remove('bg-montano-blue');
+            };
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('user-voice-input').value = transcript;
+                analyzeUserResponse();
+            };
+
+            recognition.onerror = function(event) {
+                console.error("Speech Recognition Error", event.error);
+                stopRecordingState();
+            };
+
+            recognition.onend = function() {
+                stopRecordingState();
+            };
+        }
+
+        function toggleSpeechRecognition() {
+            if (!recognition) {
+                alert("Speech Recognition API is not supported by your current browser. You can type your response directly into the text field!");
+                return;
+            }
+
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        function stopRecordingState() {
+            isRecording = false;
+            document.getElementById('mic-status').innerText = "Start Recording";
+            document.getElementById('mic-btn').classList.remove('pulse-mic', 'bg-red-600');
+            document.getElementById('mic-btn').classList.add('bg-montano-blue');
+        }
+
+        // -----------------------------------------------------------------
+        // EVALUATION MOTOR & LIVE PERFORMANCE DASHBOARD ANALYSIS
+        // -----------------------------------------------------------------
+        function analyzeUserResponse() {
+            const text = document.getElementById('user-voice-input').value.trim();
+            if (!text) {
+                alert("Please speak or write a response before evaluating.");
+                return;
+            }
+
+            const lower = text.toLowerCase();
+
+            // Key Support, Referral, and Action Plan Keywords
+            const keyTerms = [
+                "support", "trust", "counselor", "adult", "help", 
+                "validate", "listen", "health", "boundary", "referral", 
+                "plan", "safety", "together", "understand", "resource"
+            ];
+
+            const foundKeywords = keyTerms.filter(kw => lower.includes(kw));
+            const wordCount = text.split(/\s+/).length;
+            
+            // 1. Speech Clarity Score
+            let clarityScore = Math.min(100, Math.max(40, wordCount * 4));
+            
+            // 2. Support & Referral Accuracy Score
+            let accuracyScore = Math.min(100, Math.max(30, foundKeywords.length * 20 + (lower.includes("counselor") || lower.includes("trusted adult") ? 15 : 0)));
+
+            // 3. Empathetic Tone Score
+            let etiquetteScore = 85;
+            if (lower.includes("understand") || lower.includes("hear you") || lower.includes("care") || lower.includes("support")) etiquetteScore += 10;
+            if (lower.includes("fault") || lower.includes("crazy") || lower.includes("whatever")) etiquetteScore -= 40;
+            etiquetteScore = Math.min(100, Math.max(20, etiquetteScore));
+
+            // Update Dashboard UI Bars
+            document.getElementById('score-clarity-val').innerText = `${clarityScore}%`;
+            document.getElementById('score-clarity-bar').style.width = `${clarityScore}%`;
+
+            document.getElementById('score-accuracy-val').innerText = `${accuracyScore}%`;
+            document.getElementById('score-accuracy-bar').style.width = `${accuracyScore}%`;
+
+            document.getElementById('score-etiquette-val').innerText = `${etiquetteScore}%`;
+            document.getElementById('score-etiquette-bar').style.width = `${etiquetteScore}%`;
+
+            // Display Detected Keywords
+            const container = document.getElementById('detected-keywords');
+            if (foundKeywords.length > 0) {
+                container.innerHTML = foundKeywords.map(kw => 
+                    `<span class="px-2.5 py-1 bg-montano-lightblue/30 text-montano-blue border border-montano-lightblue rounded-full font-bold text-xs"><i class="fa-solid fa-check text-montano-teal mr-1"></i>${kw}</span>`
+                ).join('');
+            } else {
+                container.innerHTML = `<span class="text-xs text-amber-600 italic">Try incorporating terms like 'support', 'counselor', 'trusted adult', or 'validate'.</span>`;
+            }
+
+            // AI Feedback
+            let feedback = "";
+            if (accuracyScore >= 75) {
+                feedback = "Exceptional capstone response! You clearly validated your peer without judgment and provided a concrete path to trusted professional support.";
+            } else if (accuracyScore >= 50) {
+                feedback = "Solid effort. To improve, explicitly mention a trusted adult figure (like a guidance counselor) and offer to accompany them.";
+            } else {
+                feedback = "Good start. Focus on using empathetic validating phrases and directing the person toward real help.";
+            }
+
+            document.getElementById('ai-feedback-text').innerText = feedback;
+            speakText(`Evaluation complete. ${feedback}`);
+        }
+
+        // -----------------------------------------------------------------
+        // ACTIVITY SUBMISSION LOGIC
+        // -----------------------------------------------------------------
+        function submitDiscussionActivity() {
+            alert("Well-being Action Plan & Workshop submitted successfully to the Colegio Montano portal!");
+        }
+    </script>
+</body>
+</html>
